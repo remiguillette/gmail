@@ -39,7 +39,7 @@ def saver():
     try:
         image_data = request.files['image'].read()
         image = Image.open(io.BytesIO(image_data))
-        
+
         # Set DPI for high-resolution output.  Adjust as needed.
         image = image.convert("RGB")
         image.save("temp.png", dpi=(2000,2000))
