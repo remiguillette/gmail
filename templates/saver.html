@@ -29,10 +29,11 @@
             background: #e98412;
         }
         #preview {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            min-height: 500px;
             border: 1px solid #ccc;
             margin: 20px 0;
+            overflow: hidden;
         }
         #svgOutput {
             width: 100%;
@@ -54,109 +55,110 @@
     <script>
         async function fetchAndPreview() {
             try {
-                const response = await fetch('https://81e8e6c4-81d1-44e5-9195-7a5773c130c9-00-o7ufz1bgqvyd.janeway.replit.dev/');
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
+                // Create an iframe to load the content
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '500px';
+                iframe.style.border = 'none';
+                iframe.src = '/';
                 
-                // Extract the content container
-                const contentContainer = doc.querySelector('.content-container');
-                if (contentContainer) {
-                    document.getElementById('preview').innerHTML = contentContainer.outerHTML;
-                    // Copy styles
-                    const styles = Array.from(doc.querySelectorAll('style, link[rel="stylesheet"]'));
-                    styles.forEach(style => {
-                        document.head.appendChild(style.cloneNode(true));
-                    });
-                }
+                const preview = document.getElementById('preview');
+                preview.innerHTML = '';
+                preview.appendChild(iframe);
             } catch (error) {
-                console.error('Error fetching content:', error);
+                console.error('Error loading content:', error);
                 alert('Error loading business card');
             }
         }
 
         function convertToSVG() {
-            const content = document.querySelector('.content-container');
-            if (!content) {
+            const iframe = document.querySelector('#preview iframe');
+            if (!iframe) {
                 alert('Please load the business card first');
                 return;
             }
 
-            // Create SVG
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.createElementNS(svgNS, "svg");
-            svg.setAttribute("width", "4096");
-            svg.setAttribute("height", "2160");
-            svg.setAttribute("viewBox", "0 0 4096 2160");
+            try {
+                const content = iframe.contentDocument.querySelector('.content-container');
+                if (!content) {
+                    alert('Could not find business card content');
+                    return;
+                }
 
-            // Convert content to SVG elements
-            const leftPanel = content.querySelector('.left-panel');
-            const rightPanel = content.querySelector('.right-panel');
+                // Create SVG
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("width", "4096");
+                svg.setAttribute("height", "2160");
+                svg.setAttribute("viewBox", "0 0 4096 2160");
 
-            // Create background rectangles
-            const leftRect = document.createElementNS(svgNS, "rect");
-            leftRect.setAttribute("x", "0");
-            leftRect.setAttribute("y", "0");
-            leftRect.setAttribute("width", "2048");
-            leftRect.setAttribute("height", "2160");
-            leftRect.setAttribute("fill", "black");
-            svg.appendChild(leftRect);
+                // Create background rectangles
+                const leftRect = document.createElementNS(svgNS, "rect");
+                leftRect.setAttribute("x", "0");
+                leftRect.setAttribute("y", "0");
+                leftRect.setAttribute("width", "2048");
+                leftRect.setAttribute("height", "2160");
+                leftRect.setAttribute("fill", "black");
+                svg.appendChild(leftRect);
 
-            const rightRect = document.createElementNS(svgNS, "rect");
-            rightRect.setAttribute("x", "2048");
-            rightRect.setAttribute("y", "0");
-            rightRect.setAttribute("width", "2048");
-            rightRect.setAttribute("height", "2160");
-            rightRect.setAttribute("fill", "#f89422");
-            svg.appendChild(rightRect);
+                const rightRect = document.createElementNS(svgNS, "rect");
+                rightRect.setAttribute("x", "2048");
+                rightRect.setAttribute("y", "0");
+                rightRect.setAttribute("width", "2048");
+                rightRect.setAttribute("height", "2160");
+                rightRect.setAttribute("fill", "#f89422");
+                svg.appendChild(rightRect);
 
-            // Add text elements
-            function addText(text, x, y, color, fontSize) {
-                const textElement = document.createElementNS(svgNS, "text");
-                textElement.setAttribute("x", x);
-                textElement.setAttribute("y", y);
-                textElement.setAttribute("fill", color);
-                textElement.setAttribute("font-size", fontSize);
-                textElement.setAttribute("font-family", "Tahoma, Inter, sans-serif");
-                textElement.textContent = text;
-                svg.appendChild(textElement);
+                // Add text elements from the iframe content
+                const computedStyle = iframe.contentDocument.documentElement.style;
+                const textElements = {
+                    'left-panel-title-first': { x: 100, y: 200, color: "blue", size: 104 },
+                    'left-panel-title-last': { x: 400, y: 200, color: "#f89422", size: 104 },
+                    'left-panel-text1': { x: 100, y: 400, color: "#f89422", size: 72 },
+                    'left-panel-text2': { x: 100, y: 500, color: "#f89422", size: 72 },
+                    'left-panel-text4': { x: 100, y: 700, color: "#f89422", size: 55 },
+                    'left-panel-text5': { x: 100, y: 800, color: "#f89422", size: 43 },
+                    'right-panel-title': { x: 2148, y: 200, color: "black", size: 104 },
+                    'right-panel-text1': { x: 2148, y: 400, color: "black", size: 72 },
+                    'right-panel-text2': { x: 2148, y: 500, color: "black", size: 72 },
+                    'right-panel-text3': { x: 2148, y: 600, color: "black", size: 72 },
+                    'right-panel-text4': { x: 2148, y: 700, color: "black", size: 72 },
+                    'right-panel-text5': { x: 2148, y: 800, color: "black", size: 72 }
+                };
+
+                Object.entries(textElements).forEach(([key, props]) => {
+                    const text = document.createElementNS(svgNS, "text");
+                    text.setAttribute("x", props.x);
+                    text.setAttribute("y", props.y);
+                    text.setAttribute("fill", props.color);
+                    text.setAttribute("font-size", props.size);
+                    text.setAttribute("font-family", "Tahoma, Inter, sans-serif");
+                    text.textContent = computedStyle.getPropertyValue(`--${key}`).replace(/['"]/g, '');
+                    svg.appendChild(text);
+                });
+
+                // Set XML namespace
+                svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
+                
+                // Display SVG
+                const svgOutput = document.getElementById('svgOutput');
+                svgOutput.innerHTML = svg.outerHTML;
+
+                // Add download capability
+                const serializer = new XMLSerializer();
+                const svgStr = serializer.serializeToString(svg);
+                const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(svgBlob);
+                downloadLink.download = 'business-card.svg';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(downloadLink.href);
+            } catch (error) {
+                console.error('Error converting to SVG:', error);
+                alert('Error converting to SVG');
             }
-
-            // Add left panel text
-            const computedStyle = window.getComputedStyle(document.documentElement);
-            addText(computedStyle.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), 100, 200, "blue", "104");
-            addText(computedStyle.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), 400, 200, "#f89422", "104");
-            addText(computedStyle.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), 100, 400, "#f89422", "72");
-            addText(computedStyle.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), 100, 500, "#f89422", "72");
-            addText(computedStyle.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), 100, 700, "#f89422", "55");
-            addText(computedStyle.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), 100, 800, "#f89422", "43");
-
-            // Add right panel text
-            addText(computedStyle.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), 2148, 200, "black", "104");
-            addText(computedStyle.getPropertyValue('--right-panel-text1').replace(/['"]/g, ''), 2148, 400, "black", "72");
-            addText(computedStyle.getPropertyValue('--right-panel-text2').replace(/['"]/g, ''), 2148, 500, "black", "72");
-            addText(computedStyle.getPropertyValue('--right-panel-text3').replace(/['"]/g, ''), 2148, 600, "black", "72");
-            addText(computedStyle.getPropertyValue('--right-panel-text4').replace(/['"]/g, ''), 2148, 700, "black", "72");
-            addText(computedStyle.getPropertyValue('--right-panel-text5').replace(/['"]/g, ''), 2148, 800, "black", "72");
-
-            // Set XML namespace
-            svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
-            
-            // Display SVG
-            const svgOutput = document.getElementById('svgOutput');
-            svgOutput.innerHTML = svg.outerHTML;
-
-            // Add download capability
-            const serializer = new XMLSerializer();
-            const svgStr = serializer.serializeToString(svg);
-            const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(svgBlob);
-            downloadLink.download = 'business-card.svg';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(downloadLink.href);
         }
     </script>
 </body>
