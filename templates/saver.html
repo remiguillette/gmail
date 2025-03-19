@@ -55,7 +55,6 @@
     <script>
         async function fetchAndPreview() {
             try {
-                // Create an iframe to load the content
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
                 iframe.style.height = '500px';
@@ -85,7 +84,6 @@
                     return;
                 }
 
-                // Create SVG
                 const svgNS = "http://www.w3.org/2000/svg";
                 const svg = document.createElementNS(svgNS, "svg");
                 svg.setAttribute("width", "4096");
@@ -109,26 +107,28 @@
                 rightRect.setAttribute("fill", "#f89422");
                 svg.appendChild(rightRect);
 
-                // Add text elements from the iframe content
+                // Extract CSS variables
                 const styles = getComputedStyle(iframe.contentDocument.documentElement);
                 const textElements = [
-                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 200, color: "blue", size: 104 },
-                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 400, y: 200, color: "#f89422", size: 104 },
-                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 400, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 500, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text3-first').replace(/['"]/g, ''), x: 100, y: 600, color: "blue", size: 104 },
-                    { text: styles.getPropertyValue('--left-panel-text3-last').replace(/['"]/g, ''), x: 400, y: 600, color: "#f89422", size: 104 },
-                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 700, color: "#f89422", size: 55 },
-                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 800, color: "#f89422", size: 43 },
+                    // Left panel
+                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 200, color: "blue", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 350, y: 200, color: "#f89422", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 350, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 450, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text3-first').replace(/['"]/g, ''), x: 100, y: 600, color: "blue", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text3-last').replace(/['"]/g, ''), x: 350, y: 600, color: "#f89422", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 750, color: "#f89422", size: 55 },
+                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 850, color: "#f89422", size: 43 },
                     { text: 'Proud to be Ontarian', x: 250, y: 950, color: "#f89422", size: 43 },
                     { text: 'Fiers d\'être Ontariens', x: 250, y: 1000, color: "#f89422", size: 43 },
-                    { text: styles.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), x: 2148, y: 200, color: "black", size: 104 },
-                    { text: styles.getPropertyValue('--right-panel-subtitle').replace(/['"]/g, ''), x: 2148, y: 300, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text1').replace(/['"]/g, ''), x: 2148, y: 400, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text2').replace(/['"]/g, ''), x: 2148, y: 500, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text3').replace(/['"]/g, ''), x: 2148, y: 600, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text4').replace(/['"]/g, ''), x: 2148, y: 700, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text5').replace(/['"]/g, ''), x: 2148, y: 800, color: "black", size: 72 }
+                    // Right panel
+                    { text: styles.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), x: 2148, y: 200, color: "black", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--right-panel-subtitle').replace(/['"]/g, ''), x: 2148, y: 350, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text1').replace(/['"]/g, ''), x: 2148, y: 500, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text2').replace(/['"]/g, ''), x: 2148, y: 600, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text3').replace(/['"]/g, ''), x: 2148, y: 700, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text4').replace(/['"]/g, ''), x: 2148, y: 800, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text5').replace(/['"]/g, ''), x: 2148, y: 900, color: "black", size: 72 }
                 ];
 
                 // Add beaver logo
@@ -142,24 +142,27 @@
                 svg.appendChild(beaverImage);
 
                 textElements.forEach((props) => {
-                    const text = document.createElementNS(svgNS, "text");
-                    text.setAttribute("x", props.x);
-                    text.setAttribute("y", props.y);
-                    text.setAttribute("fill", props.color);
-                    text.setAttribute("font-size", `${props.size}px`);
-                    text.setAttribute("font-family", "Tahoma, Inter, sans-serif");
-                    text.textContent = props.text;
-                    svg.appendChild(text);
+                    if (props.text) {
+                        const text = document.createElementNS(svgNS, "text");
+                        text.setAttribute("x", props.x.toString());
+                        text.setAttribute("y", props.y.toString());
+                        text.setAttribute("fill", props.color);
+                        text.setAttribute("font-size", `${props.size}px`);
+                        text.setAttribute("font-family", "Tahoma, Inter, sans-serif");
+                        if (props.weight) {
+                            text.setAttribute("font-weight", props.weight);
+                        }
+                        text.textContent = props.text;
+                        svg.appendChild(text);
+                    }
                 });
 
-                // Set XML namespace
                 svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
+                svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
                 
-                // Display SVG
                 const svgOutput = document.getElementById('svgOutput');
                 svgOutput.innerHTML = svg.outerHTML;
 
-                // Add download capability
                 const serializer = new XMLSerializer();
                 const svgStr = serializer.serializeToString(svg);
                 const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
