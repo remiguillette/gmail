@@ -30,16 +30,30 @@ db.init_app(app)
 def serve():
     return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/saver')
+@app.route('/saver', methods=['GET', 'POST'])
 def saver():
-    return render_template('saver.html')
+    if request.method == 'GET':
+        return render_template('saver.html')
+    
+    try:
+        image_data = request.files['image'].read()
+        image = Image.open(io.BytesIO(image_data))
+
+        # Set DPI for high-resolution output
+        image = image.convert("RGB")
+        image.save("temp.png", dpi=(2000,2000))
+
+        svg_data = cairosvg.svg2png(url="temp.png")
+        os.remove("temp.png")
+
+        encoded_svg = base64.b64encode(svg_data).decode('utf-8')
+        return jsonify({'svg': encoded_svg})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/<path:path>')
 def static_file(path):
     return send_from_directory(app.static_folder, path)
-
-@app.route('/saver', methods=['POST'])
-def saver():
     try:
         image_data = request.files['image'].read()
         image = Image.open(io.BytesIO(image_data))
