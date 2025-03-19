@@ -13,4 +13,7 @@ dependencies = [
     "flask-cors>=5.0.1",
     "sqlalchemy>=2.0.39",
     "flask-login>=0.6.3",
+    "pillow>=11.1.0",
+    "svgwrite>=1.4.3",
+    "cairosvg>=2.7.1",
 ]
