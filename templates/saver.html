@@ -71,17 +71,15 @@
         }
 
         function convertToSVG() {
-            const svg = document.querySelector('#preview svg');
-            if (!svg) {
+            const preview = document.getElementById('preview');
+            if (!preview || !preview.innerHTML) {
                 alert('Please load the business card first');
                 return;
             }
 
             try {
-                const serializer = new XMLSerializer();
-                const svgStr = serializer.serializeToString(svg);
-
-                const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
+                const svgContent = preview.innerHTML;
+                const svgBlob = new Blob([svgContent], {type: 'image/svg+xml;charset=utf-8'});
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(svgBlob);
                 downloadLink.download = 'business-card.svg';
