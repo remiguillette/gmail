@@ -1,12 +1,12 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-app = Flask(__name__, static_folder='../client/public')
+app = Flask(__name__, static_folder='static')
 CORS(app)
 
 @app.route('/')
 def serve():
-    return send_from_directory(app.static_folder, 'index.html')
+    return send_from_directory('attached_assets', 'business-card (2).svg')
 
 @app.route('/<path:path>')
 def static_file(path):
