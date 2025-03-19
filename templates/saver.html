@@ -110,7 +110,7 @@
                 svg.appendChild(rightRect);
 
                 // Add text elements from the iframe content
-                const styles = getComputedStyle(document.documentElement);
+                const styles = getComputedStyle(iframe.contentDocument.documentElement);
                 const textElements = [
                     { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 200, color: "blue", size: 104 },
                     { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 400, y: 200, color: "#f89422", size: 104 },
