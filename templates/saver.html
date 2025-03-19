@@ -110,30 +110,30 @@
                 svg.appendChild(rightRect);
 
                 // Add text elements from the iframe content
-                const computedStyle = iframe.contentDocument.documentElement.style;
-                const textElements = {
-                    'left-panel-title-first': { x: 100, y: 200, color: "blue", size: 104 },
-                    'left-panel-title-last': { x: 400, y: 200, color: "#f89422", size: 104 },
-                    'left-panel-text1': { x: 100, y: 400, color: "#f89422", size: 72 },
-                    'left-panel-text2': { x: 100, y: 500, color: "#f89422", size: 72 },
-                    'left-panel-text4': { x: 100, y: 700, color: "#f89422", size: 55 },
-                    'left-panel-text5': { x: 100, y: 800, color: "#f89422", size: 43 },
-                    'right-panel-title': { x: 2148, y: 200, color: "black", size: 104 },
-                    'right-panel-text1': { x: 2148, y: 400, color: "black", size: 72 },
-                    'right-panel-text2': { x: 2148, y: 500, color: "black", size: 72 },
-                    'right-panel-text3': { x: 2148, y: 600, color: "black", size: 72 },
-                    'right-panel-text4': { x: 2148, y: 700, color: "black", size: 72 },
-                    'right-panel-text5': { x: 2148, y: 800, color: "black", size: 72 }
-                };
+                const styles = getComputedStyle(document.documentElement);
+                const textElements = [
+                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 200, color: "blue", size: 104 },
+                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 400, y: 200, color: "#f89422", size: 104 },
+                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 400, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 500, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 700, color: "#f89422", size: 55 },
+                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 800, color: "#f89422", size: 43 },
+                    { text: styles.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), x: 2148, y: 200, color: "black", size: 104 },
+                    { text: styles.getPropertyValue('--right-panel-text1').replace(/['"]/g, ''), x: 2148, y: 400, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text2').replace(/['"]/g, ''), x: 2148, y: 500, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text3').replace(/['"]/g, ''), x: 2148, y: 600, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text4').replace(/['"]/g, ''), x: 2148, y: 700, color: "black", size: 72 },
+                    { text: styles.getPropertyValue('--right-panel-text5').replace(/['"]/g, ''), x: 2148, y: 800, color: "black", size: 72 }
+                ];
 
-                Object.entries(textElements).forEach(([key, props]) => {
+                textElements.forEach((props) => {
                     const text = document.createElementNS(svgNS, "text");
                     text.setAttribute("x", props.x);
                     text.setAttribute("y", props.y);
                     text.setAttribute("fill", props.color);
-                    text.setAttribute("font-size", props.size);
+                    text.setAttribute("font-size", `${props.size}px`);
                     text.setAttribute("font-family", "Tahoma, Inter, sans-serif");
-                    text.textContent = computedStyle.getPropertyValue(`--${key}`).replace(/['"]/g, '');
+                    text.textContent = props.text;
                     svg.appendChild(text);
                 });
 
