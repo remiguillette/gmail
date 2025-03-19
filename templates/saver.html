@@ -111,16 +111,16 @@
                 const styles = getComputedStyle(iframe.contentDocument.documentElement);
                 const textElements = [
                     // Left panel
-                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 200, color: "blue", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 350, y: 200, color: "#f89422", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 350, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 450, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text3-first').replace(/['"]/g, ''), x: 100, y: 600, color: "blue", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text3-last').replace(/['"]/g, ''), x: 350, y: 600, color: "#f89422", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 750, color: "#f89422", size: 55 },
-                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 850, color: "#f89422", size: 43 },
-                    { text: 'Proud to be Ontarian', x: 250, y: 950, color: "#f89422", size: 43 },
-                    { text: 'Fiers d\'être Ontariens', x: 250, y: 1000, color: "#f89422", size: 43 },
+                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 300, color: "blue", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 400, y: 300, color: "#f89422", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 500, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 600, color: "#f89422", size: 72 },
+                    { text: styles.getPropertyValue('--left-panel-text3-first').replace(/['"]/g, ''), x: 100, y: 800, color: "blue", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text3-last').replace(/['"]/g, ''), x: 400, y: 800, color: "#f89422", size: 104, weight: "bold" },
+                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 1000, color: "#f89422", size: 55 },
+                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 1100, color: "#f89422", size: 43 },
+                    { text: 'Proud to be Ontarian', x: 250, y: 1300, color: "#f89422", size: 43 },
+                    { text: 'Fiers d\'être Ontariens', x: 250, y: 1350, color: "#f89422", size: 43 },
                     // Right panel
                     { text: styles.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), x: 2148, y: 200, color: "black", size: 104, weight: "bold" },
                     { text: styles.getPropertyValue('--right-panel-subtitle').replace(/['"]/g, ''), x: 2148, y: 350, color: "black", size: 72 },
@@ -135,9 +135,9 @@
                 const beaverImage = document.createElementNS(svgNS, "image");
                 beaverImage.setAttributeNS("http://www.w3.org/1999/xlink", "href", "/beaver.svg");
                 beaverImage.setAttribute("x", "100");
-                beaverImage.setAttribute("y", "900");
-                beaverImage.setAttribute("width", "120");
-                beaverImage.setAttribute("height", "120");
+                beaverImage.setAttribute("y", "1200");
+                beaverImage.setAttribute("width", "140");
+                beaverImage.setAttribute("height", "140");
                 beaverImage.setAttribute("filter", "invert(57%) sepia(87%) saturate(1401%) hue-rotate(346deg) brightness(101%) contrast(94%)");
                 svg.appendChild(beaverImage);
 
