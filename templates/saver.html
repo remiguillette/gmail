@@ -1,13 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Card to SVG Converter</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        .content {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -18,39 +17,36 @@
             gap: 10px;
         }
         button {
-            background: #f89422;
+            background: #FFA500;
             color: white;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
             font-size: 16px;
+            border-radius: 5px;
         }
         button:hover {
             background: #e98412;
         }
-        #preview {
+        #preview, #svgOutput {
             width: 100%;
             min-height: 500px;
             border: 1px solid #ccc;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        #svgOutput {
-            width: 100%;
-            height: 500px;
             margin-top: 20px;
-            border: 1px solid #ccc;
+            background-color: white;
         }
     </style>
 </head>
 <body>
-    <h1>Business Card to SVG Converter</h1>
-    <div class="button-container">
-        <button onclick="fetchAndPreview()">Load Business Card</button>
-        <button id="convertBtn" onclick="convertToSVG()">Convert to SVG</button>
+    <div class="content">
+        <h1>Business Card to SVG Converter</h1>
+        <div class="button-container">
+            <button onclick="fetchAndPreview()">Load Business Card</button>
+            <button id="convertBtn" onclick="convertToSVG()">Convert to SVG</button>
+        </div>
+        <div id="preview"></div>
+        <div id="svgOutput"></div>
     </div>
-    <div id="preview"></div>
-    <div id="svgOutput"></div>
 
     <script>
         async function fetchAndPreview() {
@@ -60,7 +56,7 @@
                 iframe.style.height = '500px';
                 iframe.style.border = 'none';
                 iframe.src = '/';
-                
+
                 const preview = document.getElementById('preview');
                 preview.innerHTML = '';
                 preview.appendChild(iframe);
@@ -78,93 +74,15 @@
             }
 
             try {
-                const content = iframe.contentDocument.querySelector('.content-container');
+                const content = iframe.contentDocument.documentElement;
                 if (!content) {
                     alert('Could not find business card content');
                     return;
                 }
 
-                const svgNS = "http://www.w3.org/2000/svg";
-                const svg = document.createElementNS(svgNS, "svg");
-                svg.setAttribute("width", "4096");
-                svg.setAttribute("height", "2160");
-                svg.setAttribute("viewBox", "0 0 4096 2160");
-
-                // Create background rectangles
-                const leftRect = document.createElementNS(svgNS, "rect");
-                leftRect.setAttribute("x", "0");
-                leftRect.setAttribute("y", "0");
-                leftRect.setAttribute("width", "2048");
-                leftRect.setAttribute("height", "2160");
-                leftRect.setAttribute("fill", "black");
-                svg.appendChild(leftRect);
-
-                const rightRect = document.createElementNS(svgNS, "rect");
-                rightRect.setAttribute("x", "2048");
-                rightRect.setAttribute("y", "0");
-                rightRect.setAttribute("width", "2048");
-                rightRect.setAttribute("height", "2160");
-                rightRect.setAttribute("fill", "#f89422");
-                svg.appendChild(rightRect);
-
-                // Extract CSS variables
-                const styles = getComputedStyle(iframe.contentDocument.documentElement);
-                const textElements = [
-                    // Left panel
-                    { text: styles.getPropertyValue('--left-panel-title-first').replace(/['"]/g, ''), x: 100, y: 300, color: "blue", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-title-last').replace(/['"]/g, ''), x: 400, y: 300, color: "#f89422", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text1').replace(/['"]/g, ''), x: 100, y: 500, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text2').replace(/['"]/g, ''), x: 100, y: 600, color: "#f89422", size: 72 },
-                    { text: styles.getPropertyValue('--left-panel-text3-first').replace(/['"]/g, ''), x: 100, y: 800, color: "blue", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text3-last').replace(/['"]/g, ''), x: 400, y: 800, color: "#f89422", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--left-panel-text4').replace(/['"]/g, ''), x: 100, y: 1000, color: "#f89422", size: 55 },
-                    { text: styles.getPropertyValue('--left-panel-text5').replace(/['"]/g, ''), x: 100, y: 1100, color: "#f89422", size: 43 },
-                    { text: 'Proud to be Ontarian', x: 250, y: 1300, color: "#f89422", size: 43 },
-                    { text: 'Fiers d\'être Ontariens', x: 250, y: 1350, color: "#f89422", size: 43 },
-                    // Right panel
-                    { text: styles.getPropertyValue('--right-panel-title').replace(/['"]/g, ''), x: 2148, y: 200, color: "black", size: 104, weight: "bold" },
-                    { text: styles.getPropertyValue('--right-panel-subtitle').replace(/['"]/g, ''), x: 2148, y: 350, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text1').replace(/['"]/g, ''), x: 2148, y: 500, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text2').replace(/['"]/g, ''), x: 2148, y: 600, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text3').replace(/['"]/g, ''), x: 2148, y: 700, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text4').replace(/['"]/g, ''), x: 2148, y: 800, color: "black", size: 72 },
-                    { text: styles.getPropertyValue('--right-panel-text5').replace(/['"]/g, ''), x: 2148, y: 900, color: "black", size: 72 }
-                ];
-
-                // Add beaver logo
-                const beaverImage = document.createElementNS(svgNS, "image");
-                beaverImage.setAttributeNS("http://www.w3.org/1999/xlink", "href", "/beaver.svg");
-                beaverImage.setAttribute("x", "100");
-                beaverImage.setAttribute("y", "1200");
-                beaverImage.setAttribute("width", "140");
-                beaverImage.setAttribute("height", "140");
-                beaverImage.setAttribute("filter", "invert(57%) sepia(87%) saturate(1401%) hue-rotate(346deg) brightness(101%) contrast(94%)");
-                svg.appendChild(beaverImage);
-
-                textElements.forEach((props) => {
-                    if (props.text) {
-                        const text = document.createElementNS(svgNS, "text");
-                        text.setAttribute("x", props.x.toString());
-                        text.setAttribute("y", props.y.toString());
-                        text.setAttribute("fill", props.color);
-                        text.setAttribute("font-size", `${props.size}px`);
-                        text.setAttribute("font-family", "Tahoma, Inter, sans-serif");
-                        if (props.weight) {
-                            text.setAttribute("font-weight", props.weight);
-                        }
-                        text.textContent = props.text;
-                        svg.appendChild(text);
-                    }
-                });
-
-                svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
-                svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-                
-                const svgOutput = document.getElementById('svgOutput');
-                svgOutput.innerHTML = svg.outerHTML;
-
                 const serializer = new XMLSerializer();
-                const svgStr = serializer.serializeToString(svg);
+                const svgStr = serializer.serializeToString(content);
+
                 const svgBlob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(svgBlob);
