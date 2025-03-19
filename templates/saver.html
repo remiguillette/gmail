@@ -51,15 +51,19 @@
     <script>
         async function fetchAndPreview() {
             try {
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '500px';
-                iframe.style.border = 'none';
-                iframe.src = '/';
-
+                const response = await fetch('/');
+                const svgText = await response.text();
+                
                 const preview = document.getElementById('preview');
-                preview.innerHTML = '';
-                preview.appendChild(iframe);
+                preview.innerHTML = svgText;
+                
+                // Ensure SVG fills the container
+                const svg = preview.querySelector('svg');
+                if (svg) {
+                    svg.style.width = '100%';
+                    svg.style.height = '100%';
+                    svg.style.maxHeight = '500px';
+                }
             } catch (error) {
                 console.error('Error loading content:', error);
                 alert('Error loading business card');
