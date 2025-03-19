@@ -30,6 +30,10 @@ db.init_app(app)
 def serve():
     return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/saver')
+def saver():
+    return render_template('saver.html')
+
 @app.route('/<path:path>')
 def static_file(path):
     return send_from_directory(app.static_folder, path)
