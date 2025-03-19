@@ -1,4 +1,5 @@
-{pkgs}: {
+
+{ pkgs }: {
   deps = [
     pkgs.zlib
     pkgs.tk
@@ -13,5 +14,8 @@
     pkgs.freetype
     pkgs.postgresql
     pkgs.openssl
+    pkgs.cairo
+    pkgs.pango
+    pkgs.librsvg
   ];
 }
